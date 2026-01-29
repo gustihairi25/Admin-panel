@@ -11,36 +11,16 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
-        
-        /* Fix untuk tinggi layar HP agar tidak terpotong address bar */
         :root { --vh: 1vh; }
-        body { 
-            background: #000; color: #eee; 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            height: calc(var(--vh, 1vh) * 100); 
-            overflow: hidden; 
-            display: flex; flex-direction: column;
-        }
-        
+        body { background: #000; color: #eee; font-family: 'Plus Jakarta Sans', sans-serif; height: calc(var(--vh, 1vh) * 100); overflow: hidden; display: flex; flex-direction: column; }
         .glass { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
-        
-        /* Content area flex fix */
         .tab-content { display: none; flex: 1; overflow: hidden; width: 100%; }
         .tab-active { display: flex; flex-direction: column; }
-        
         .active-nav { color: #f3ba2f; border-bottom: 2px solid #f3ba2f; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
         .chat-bubble-admin { background: #f3ba2f; color: #000; align-self: flex-end; border-radius: 15px 15px 2px 15px; word-break: break-word; }
         .chat-bubble-user { background: #222; color: #fff; align-self: flex-start; border-radius: 15px 15px 15px 2px; border: 1px solid #333; word-break: break-word; }
-        
-        /* Responsif Grid untuk User Cards */
-        #user-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 12px;
-            padding-bottom: 20px;
-        }
+        #user-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; padding-bottom: 20px; }
     </style>
 </head>
 <body class="p-3 md:p-6">
@@ -113,10 +93,14 @@
         const app = initializeApp(config);
         const db = getFirestore(app);
 
-        // Fix Tinggi Layar Mobile
         const setVh = () => { document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`); };
         window.addEventListener('resize', setVh);
         setVh();
+
+        // FUNGSI FORMAT TITIK (3.000.000)
+        const formatIDR = (val) => {
+            return new Intl.NumberFormat('id-ID').format(val);
+        };
 
         let activeUID = null;
         let base64String = "";
@@ -175,8 +159,8 @@
                 uList.innerHTML += `<div class="glass p-4 rounded-3xl space-y-3">
                     <p class="text-[9px] font-black text-gray-500 truncate">${email}</p>
                     <div class="p-2 bg-white/5 rounded-xl border border-white/5">
-                        <p class="text-[7px] text-gray-500 font-black uppercase">Balance IDR</p>
-                        <input type="number" value="${u.balance||0}" onchange="updateB('${id}',this.value)" class="bg-transparent text-sm font-black text-yellow-500 outline-none w-full">
+                        <p class="text-[7px] text-gray-500 font-black uppercase">Balance IDR: <span class="text-white">Rp ${formatIDR(u.balance || 0)}</span></p>
+                        <input type="number" value="${u.balance||0}" onchange="updateB('${id}',this.value)" class="bg-transparent text-sm font-black text-yellow-500 outline-none w-full" placeholder="Ubah nominal...">
                     </div>
                     <div class="grid grid-cols-1 gap-1">${coinHtml}</div>
                 </div>`;
@@ -230,7 +214,6 @@
         document.getElementById('admin-msg').onkeypress = (e) => { if(e.key === 'Enter') sendReply(); };
         lucide.createIcons();
 
-        // PWA Installer
         let defPrompt;
         window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); defPrompt = e; document.getElementById('install-modal').classList.remove('hidden'); });
         window.installApp = () => { if(defPrompt) { defPrompt.prompt(); document.getElementById('install-modal').classList.add('hidden'); } };
