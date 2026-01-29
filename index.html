@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Hub | Admin Panel ZetaChain</title>
-    
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f3ba2f">
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIk1hc3RlciBIdWIgQWRtaW4iLAogICJzaG9ydF9uYW1lIjogIk1hc3Rlckh1YiIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDAwMDAwIiwKICAidGhlbWVfY29sb3IiOiAiI2YzYmEyZiIsCiAgImljb25zIjogW3sKICAgICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsaXRpY29uLmNvbS81MTIvNDI1OS80MjU5ODUwLnBuZyIsCiAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgfV0KfQ==">
-
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -20,27 +20,10 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .chat-bubble-admin { background: #f3ba2f; color: #000; align-self: flex-end; border-radius: 15px 15px 2px 15px; }
         .chat-bubble-user { background: #222; color: #fff; align-self: flex-start; border-radius: 15px 15px 15px 2px; border: 1px solid #333; }
-        
-        /* Style Bar Notifikasi Install */
-        #install-banner { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: none; width: 90%; max-width: 400px; animation: slideUp 0.5s ease-out; }
-        @keyframes slideUp { from { bottom: -100px; } to { bottom: 20px; } }
+        #install-modal { transition: transform 0.3s ease-in-out; }
     </style>
 </head>
 <body class="p-4 md:p-6">
-
-    <div id="install-banner" class="glass p-4 rounded-3xl border border-yellow-500/30 flex items-center justify-between shadow-2xl">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-yellow-500 rounded-xl flex items-center justify-center text-black">
-                <i data-lucide="download"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-black uppercase tracking-wider">Download Master Hub</p>
-                <p class="text-[8px] text-gray-400">Instal aplikasi untuk akses instan</p>
-            </div>
-        </div>
-        <button id="install-button" class="bg-yellow-500 text-black px-4 py-2 rounded-xl text-[10px] font-black uppercase">Instal</button>
-    </div>
-
     <div class="max-w-[1600px] mx-auto h-full flex flex-col">
         <header class="flex justify-between items-center mb-6 shrink-0">
             <h1 class="text-xl font-black italic uppercase">MASTER <span class="text-[#f3ba2f]">HUB</span></h1>
@@ -88,6 +71,17 @@
         </div>
     </div>
 
+    <div id="install-modal" class="fixed bottom-5 left-5 right-5 bg-yellow-500 p-4 rounded-2xl flex justify-between items-center z-[10000] hidden shadow-2xl">
+        <div class="flex items-center gap-3">
+            <i data-lucide="download-cloud" class="text-black"></i>
+            <span class="text-black text-[11px] font-black uppercase">Pasang ZetaAdmin di HP?</span>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="dismissInstall()" class="text-black/50 text-[10px] font-bold px-2">NANTI</button>
+            <button onclick="installApp()" class="bg-black text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase">INSTALL</button>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, doc, onSnapshot, updateDoc, setDoc, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -101,30 +95,6 @@
         const app = initializeApp(config);
         const db = getFirestore(app);
 
-        // --- LOGIKA INSTALL APK (PWA) ---
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('install-banner').style.display = 'flex';
-        });
-
-        document.getElementById('install-button').onclick = async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') document.getElementById('install-banner').style.display = 'none';
-                deferredPrompt = null;
-            }
-        };
-
-        if ('serviceWorker' in navigator) {
-            const swCode = "self.addEventListener('fetch', function(event) { event.respondWith(fetch(event.request)); });";
-            const blob = new Blob([swCode], {type: 'text/javascript'});
-            navigator.serviceWorker.register(URL.createObjectURL(blob));
-        }
-
-        // --- LOGIKA FIREBASE (TETAP SAMA) ---
         let activeUID = null;
         let base64String = "";
         const COINS = ['BTC', 'ETH', 'SOL', 'TRX', 'LINEA', 'ARB', 'BNB', 'BASE', 'OP', 'MATIC'];
@@ -146,13 +116,11 @@
             };
             reader.readAsDataURL(input.files[0]);
         };
-        
         window.saveQRIS = async () => {
             if(!base64String) return alert("Pilih gambar dulu!");
             await setDoc(doc(db, "config", "payment"), { qris_idr: base64String });
             alert("QRIS IDR Berhasil Diupdate!");
         };
-        
         window.deleteQRIS = async () => {
             if(confirm("Hapus QRIS IDR?")) {
                 await setDoc(doc(db, "config", "payment"), { qris_idr: "" });
@@ -193,12 +161,10 @@
                 const isUnread = u.lastMsgBy === 'user' && u.lastRead === false;
                 const contactBtn = document.createElement('div');
                 contactBtn.className = `p-3 mb-2 rounded-xl cursor-pointer transition-all ${activeUID === id ? 'bg-yellow-500 text-black' : 'bg-white/5 text-gray-400'}`;
-                contactBtn.innerHTML = `
-                    <div class="flex justify-between items-center">
+                contactBtn.innerHTML = `<div class="flex justify-between items-center">
                         <span class="text-[10px] font-black truncate uppercase">${email.split('@')[0]}</span>
                         ${isUnread ? '<div class="w-2 h-2 bg-red-500 rounded-full"></div>' : ''}
-                    </div>
-                `;
+                    </div>`;
                 contactBtn.onclick = () => openChat(id, email);
                 cList.appendChild(contactBtn);
             });
@@ -210,8 +176,7 @@
             document.getElementById('chat-header').innerText = `CHAT: ${email}`;
             updateDoc(doc(db, "users", uid), { lastRead: true });
             const box = document.getElementById('chat-box');
-            const qChat = query(collection(db, "users", uid, "chats"), orderBy("timestamp", "asc"));
-            onSnapshot(qChat, (sn) => {
+            onSnapshot(query(collection(db, "users", uid, "chats"), orderBy("timestamp", "asc")), (sn) => {
                 box.innerHTML = '';
                 sn.forEach(d => {
                     const m = d.data();
@@ -229,11 +194,7 @@
             const text = inp.value.trim();
             if(!activeUID || !text) return;
             inp.value = '';
-            await addDoc(collection(db, "users", activeUID, "chats"), {
-                sender: 'admin',
-                text: text,
-                timestamp: serverTimestamp()
-            });
+            await addDoc(collection(db, "users", activeUID, "chats"), { sender: 'admin', text: text, timestamp: serverTimestamp() });
             await updateDoc(doc(db, "users", activeUID), { lastMsgBy: 'admin' });
         };
 
@@ -245,6 +206,25 @@
 
         document.getElementById('admin-msg').onkeypress = (e) => { if(e.key === 'Enter') sendReply(); };
         lucide.createIcons();
+
+        // PWA Logic
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-modal').classList.remove('hidden');
+        });
+        window.installApp = () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(() => {
+                    deferredPrompt = null;
+                    document.getElementById('install-modal').classList.add('hidden');
+                });
+            }
+        };
+        window.dismissInstall = () => { document.getElementById('install-modal').classList.add('hidden'); };
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
     </script>
 </body>
 </html>
