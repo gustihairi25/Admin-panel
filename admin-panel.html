@@ -3,108 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Master Hub Pro | Final Nav</title>
+    <title>Master Hub Pro V7 | Final Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="config.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
-        :root { --vh: 1vh; }
         body { 
             background: #000; color: #eee; font-family: 'Plus Jakarta Sans', sans-serif; 
-            height: calc(var(--vh, 1vh) * 100); overflow: hidden; display: flex; flex-direction: column;
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
         }
-
-        /* Navigasi Bawah Modern */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            display: flex; justify-content: space-around;
-            padding: 12px 0; z-index: 9999;
-        }
-
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            gap: 4px; color: #555; transition: 0.3s; width: 33%;
-        }
-
-        .nav-item.active { color: #f3ba2f; }
-        .nav-item i { width: 20px; height: 20px; }
-        .nav-item span { font-size: 9px; font-weight: 800; text-transform: uppercase; }
-
-        /* Panel Content */
-        .tab-panel { display: none !important; width: 100%; height: 100%; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
-        .tab-panel.active { display: block !important; }
-
         .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px); }
-        .bubble-admin { background: #f3ba2f; color: #000; align-self: flex-end; border-radius: 12px 12px 2px 12px; padding: 10px; font-size: 11px; font-weight: 700; max-width: 80%; }
-        .bubble-user { background: #1a1a1a; color: #fff; align-self: flex-start; border-radius: 12px 12px 12px 2px; border: 1px solid #333; padding: 10px; font-size: 11px; max-width: 80%; }
+        
+        /* Tombol Navigasi Atas */
+        .tab-btn {
+            padding: 12px 20px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+            color: #666; border-bottom: 2px solid transparent; transition: 0.3s;
+        }
+        .tab-btn.active { color: #f3ba2f; border-bottom: 2px solid #f3ba2f; }
+        
+        /* Kontainer Panel */
+        .panel { display: none; flex-direction: column; height: 100%; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        .panel.active { display: flex; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-    <header class="p-6 flex justify-between items-center shrink-0">
-        <h1 class="text-xl font-black italic tracking-tighter">MASTER <span class="text-[#f3ba2f]">HUB</span></h1>
-        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+    <header class="p-6 pb-2 flex justify-between items-center shrink-0">
+        <h1 class="text-2xl font-black italic tracking-tighter">MASTER <span class="text-[#f3ba2f]">HUB</span></h1>
+        <div class="px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-[10px] font-black text-yellow-500 uppercase">Admin V7</div>
     </header>
 
-    <div id="main-content" class="flex-1 overflow-hidden relative">
+    <nav class="flex justify-around border-b border-white/5 shrink-0 bg-black">
+        <button onclick="switchTab('market')" id="btn-market" class="tab-btn active">Market</button>
+        <button onclick="switchTab('users')" id="btn-users" class="tab-btn">Manage</button>
+        <button onclick="switchTab('chats')" id="btn-chats" class="tab-btn">Chats</button>
+    </nav>
+
+    <main class="flex-1 relative overflow-hidden">
         
-        <div id="pane-market" class="tab-panel active">
-            <div class="space-y-4">
-                <div class="glass p-6 rounded-[2rem] space-y-4">
-                    <p class="text-[10px] font-black text-yellow-500 uppercase">Manipulasi Harga BTC</p>
-                    <input type="number" id="offset-val" class="w-full bg-black border border-white/10 p-4 rounded-2xl text-xs font-bold outline-none text-white" placeholder="Contoh: 150">
-                    <button onclick="saveOffset()" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-[10px]">Update Market</button>
-                </div>
-                <div class="glass p-6 rounded-[2rem] space-y-4">
-                    <p class="text-[10px] font-black text-yellow-500 uppercase">Global Mode</p>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="setGlobal('win')" class="bg-green-600/20 text-green-500 py-3 rounded-xl font-black text-[9px]">WIN</button>
-                        <button onclick="setGlobal('normal')" class="bg-white/5 text-gray-400 py-3 rounded-xl font-black text-[9px]">NORMAL</button>
-                        <button onclick="setGlobal('loss')" class="bg-red-600/20 text-red-500 py-3 rounded-xl font-black text-[9px]">LOSS</button>
-                    </div>
+        <div id="pane-market" class="panel active">
+            <div class="glass p-6 rounded-[2rem] mb-4">
+                <p class="text-[10px] font-black text-yellow-500 uppercase mb-4">Manipulasi BTC</p>
+                <input type="number" id="market-offset" class="w-full bg-black border border-white/10 p-4 rounded-2xl text-white outline-none mb-4" placeholder="Offset (contoh: 150)">
+                <button onclick="updateMarket()" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-xs">Simpan Perubahan</button>
+            </div>
+            <div class="glass p-6 rounded-[2rem]">
+                <p class="text-[10px] font-black text-yellow-500 uppercase mb-4">Mode Global</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="setGlobalMode('win')" class="bg-green-600/20 text-green-500 py-3 rounded-xl font-black text-[10px]">WIN</button>
+                    <button onclick="setGlobalMode('normal')" class="bg-white/5 text-gray-400 py-3 rounded-xl font-black text-[10px]">NORMAL</button>
+                    <button onclick="setGlobalMode('loss')" class="bg-red-600/20 text-red-500 py-3 rounded-xl font-black text-[10px]">LOSS</button>
                 </div>
             </div>
         </div>
 
-        <div id="pane-users" class="tab-panel">
-            <div id="user-list-container" class="space-y-4">
+        <div id="pane-users" class="panel">
+            <div id="user-container" class="space-y-4 no-scrollbar">
                 </div>
         </div>
 
-        <div id="pane-chats" class="tab-panel">
+        <div id="pane-chats" class="panel">
             <div class="flex flex-col h-full gap-4">
-                <div id="chat-contacts" class="flex gap-2 overflow-x-auto no-scrollbar pb-2 shrink-0"></div>
-                <div class="flex-1 glass rounded-[2rem] flex flex-col overflow-hidden">
-                    <div id="chat-header" class="p-4 border-b border-white/5 text-[10px] font-black text-yellow-500 uppercase">Pilih User</div>
-                    <div id="chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 no-scrollbar"></div>
-                    <div class="p-3 bg-black/60 border-t border-white/5 flex gap-2">
-                        <input type="text" id="chat-input" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs outline-none" placeholder="Balas...">
-                        <button onclick="sendMsg()" class="bg-yellow-500 text-black w-10 h-10 rounded-xl flex items-center justify-center shrink-0"><i data-lucide="send" class="w-4 h-4"></i></button>
+                <div id="contact-list" class="flex gap-2 overflow-x-auto no-scrollbar shrink-0"></div>
+                <div class="flex-1 glass rounded-[2rem] flex flex-col overflow-hidden bg-black/40">
+                    <div id="active-user-name" class="p-4 border-b border-white/5 text-[10px] font-black text-yellow-500 uppercase italic text-center">Pilih Kontak</div>
+                    <div id="chat-display" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 no-scrollbar"></div>
+                    <div class="p-4 bg-black border-t border-white/5 flex gap-2">
+                        <input type="text" id="input-pesan" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs outline-none text-white" placeholder="Balas...">
+                        <button onclick="kirimPesan()" class="bg-yellow-500 text-black w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="goTab('market')" id="nav-market">
-            <i data-lucide="line-chart"></i>
-            <span>Market</span>
-        </div>
-        <div class="nav-item" onclick="goTab('users')" id="nav-users">
-            <i data-lucide="users"></i>
-            <span>Users</span>
-        </div>
-        <div class="nav-item" onclick="goTab('chats')" id="nav-chats">
-            <i data-lucide="message-circle"></i>
-            <span>Chats</span>
-        </div>
-    </div>
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -112,120 +89,117 @@
 
         const app = initializeApp(APP_CONFIG.firebase);
         const db = getFirestore(app);
+        let selectedUID = "";
 
-        let activeUID = "";
+        // --- LOGIKA PERPINDAHAN MENU (PASTI JALAN) ---
+        window.switchTab = (tab) => {
+            // Hapus semua kelas active
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
 
-        // --- FIXED NAVIGATION ---
-        window.goTab = (id) => {
-            // Update UI Nav
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('nav-' + id).classList.add('active');
-
-            // Update UI Pane
-            document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
-            document.getElementById('pane-' + id).classList.add('active');
+            // Aktifkan yang dipilih
+            document.getElementById('btn-' + tab).classList.add('active');
+            document.getElementById('pane-' + tab).classList.add('active');
             
-            lucide.createIcons(); // Refresh icons
+            console.log("Berpindah ke tab: " + tab);
+            lucide.createIcons();
         };
 
-        const formatIDR = (n) => new Intl.NumberFormat('id-ID').format(n);
+        const formatRupiah = (n) => new Intl.NumberFormat('id-ID').format(n);
 
-        // --- DATABASE FUNCTIONS ---
-        window.updateSaldo = async (uid, val) => {
-            const raw = parseInt(val.replace(/[^0-9]/g, '')) || 0;
-            await updateDoc(doc(db, "users", uid), { balance: raw });
+        // --- MARKET & GLOBAL ---
+        window.updateMarket = async () => {
+            const val = parseFloat(document.getElementById('market-offset').value) || 0;
+            await setDoc(doc(db, "system", "market_control"), { offset: val }, { merge: true });
+            alert("Berhasil Update!");
         };
 
-        window.setTarget = async (uid, m) => {
-            await updateDoc(doc(db, "users", uid), { next_trade: m });
-            alert("Target Updated");
-        };
-
-        window.saveOffset = async () => {
-            const v = parseFloat(document.getElementById('offset-val').value) || 0;
-            await setDoc(doc(db, "system", "market_control"), { offset: v }, { merge: true });
-            alert("Market Updated");
-        };
-
-        window.setGlobal = async (m) => {
+        window.setGlobalMode = async (m) => {
             await setDoc(doc(db, "system", "market_control"), { mode: m }, { merge: true });
-            alert("Global set to " + m);
+            alert("Mode Global: " + m.toUpperCase());
         };
 
-        // --- CHAT LOGIC ---
-        window.openChat = (uid, email) => {
-            activeUID = uid;
-            document.getElementById('chat-header').innerText = email;
+        // --- MANAGE USER & SALDO ---
+        window.saveBalance = async (uid, val) => {
+            const num = parseInt(val.replace(/[^0-9]/g, '')) || 0;
+            await updateDoc(doc(db, "users", uid), { balance: num });
+        };
+
+        window.setUserTrade = async (uid, mode) => {
+            await updateDoc(doc(db, "users", uid), { next_trade: mode });
+            alert("User diset ke: " + mode);
+        };
+
+        // --- LIVE CHAT ---
+        window.selectChat = (uid, name) => {
+            selectedUID = uid;
+            document.getElementById('active-user-name').innerText = name;
             updateDoc(doc(db, "users", uid), { lastRead: true });
-            
-            onSnapshot(query(collection(db, "users", uid, "chats"), orderBy("timestamp", "asc")), (sn) => {
-                const box = document.getElementById('chat-box');
+
+            onSnapshot(query(collection(db, "users", uid, "chats"), orderBy("timestamp", "asc")), (snap) => {
+                const box = document.getElementById('chat-display');
                 box.innerHTML = '';
-                sn.forEach(d => {
+                snap.forEach(d => {
                     const m = d.data();
-                    const div = document.createElement('div');
-                    div.className = m.sender === 'admin' ? 'bubble-admin' : 'bubble-user';
-                    div.innerText = m.text;
-                    box.appendChild(div);
+                    const align = m.sender === 'admin' ? 'self-end bg-yellow-500 text-black' : 'self-start bg-white/10 text-white border border-white/10';
+                    box.innerHTML += `<div class="${align} p-3 rounded-2xl max-w-[85%] text-[11px] font-bold">${m.text}</div>`;
                 });
                 box.scrollTop = box.scrollHeight;
             });
         };
 
-        window.sendMsg = async () => {
-            const inp = document.getElementById('chat-input');
-            if(!activeUID || !inp.value.trim()) return;
-            const text = inp.value; inp.value = '';
-            await addDoc(collection(db, "users", activeUID, "chats"), { sender: 'admin', text: text, timestamp: serverTimestamp() });
-            await updateDoc(doc(db, "users", activeUID), { lastMsgBy: 'admin', lastRead: true });
+        window.kirimPesan = async () => {
+            const inp = document.getElementById('input-pesan');
+            if(!selectedUID || !inp.value.trim()) return;
+            const txt = inp.value; inp.value = '';
+            await addDoc(collection(db, "users", selectedUID, "chats"), { sender: 'admin', text: txt, timestamp: serverTimestamp() });
+            await updateDoc(doc(db, "users", selectedUID), { lastMsgBy: 'admin', lastRead: true });
         };
 
-        // --- REALTIME LISTENER ---
+        // --- REALTIME DATA ---
         onSnapshot(collection(db, "users"), (snap) => {
-            const uCont = document.getElementById('user-list-container');
-            const cCont = document.getElementById('chat-contacts');
-            uCont.innerHTML = ''; cCont.innerHTML = '';
+            const uBox = document.getElementById('user-container');
+            const cBox = document.getElementById('contact-list');
+            uBox.innerHTML = ''; cBox.innerHTML = '';
 
             snap.forEach(s => {
                 const u = s.data();
                 const id = s.id;
-                const email = u.email || "User";
+                const email = u.email || "No Email";
 
-                // Saldo Management Card
-                uCont.innerHTML += `
+                // Card Saldo
+                uBox.innerHTML += `
                 <div class="glass p-5 rounded-[2rem] border border-white/5">
                     <div class="flex justify-between items-center mb-4">
-                        <p class="text-[10px] font-black text-gray-500 uppercase truncate w-32">${email}</p>
-                        <div class="flex gap-1">
-                            <button onclick="setTarget('${id}','win')" class="px-3 py-1 bg-green-500/10 text-green-500 text-[8px] font-black rounded-lg">WIN</button>
-                            <button onclick="setTarget('${id}','loss')" class="px-3 py-1 bg-red-500/10 text-red-500 text-[8px] font-black rounded-lg">LOSS</button>
+                        <span class="text-[10px] font-black text-gray-400 truncate w-32">${email}</span>
+                        <div class="flex gap-2">
+                            <button onclick="setUserTrade('${id}','win')" class="bg-green-500/10 text-green-500 px-3 py-1 rounded-lg text-[8px] font-black">WIN</button>
+                            <button onclick="setUserTrade('${id}','loss')" class="bg-red-500/10 text-red-500 px-3 py-1 rounded-lg text-[8px] font-black">LOSS</button>
                         </div>
                     </div>
-                    <div class="bg-white/5 p-4 rounded-2xl">
-                        <p class="text-[7px] font-black text-gray-500 uppercase mb-1">Set Balance IDR</p>
-                        <div class="flex items-center gap-1 font-black">
+                    <div class="bg-black/60 p-4 rounded-2xl">
+                        <p class="text-[8px] font-black text-gray-500 mb-1">ATUR SALDO IDR</p>
+                        <div class="flex items-center gap-1 font-black text-white">
                             <span class="text-xs text-yellow-500">Rp</span>
-                            <input type="text" value="${formatIDR(u.balance || 0)}" 
-                                oninput="this.value = formatIDR(this.value.replace(/[^0-9]/g,'')); updateSaldo('${id}', this.value)" 
-                                class="bg-transparent text-sm w-full outline-none text-white">
+                            <input type="text" value="${formatRupiah(u.balance || 0)}" 
+                                oninput="this.value=formatRupiah(this.value.replace(/[^0-9]/g,'')); saveBalance('${id}', this.value)" 
+                                class="bg-transparent w-full outline-none text-sm">
                         </div>
                     </div>
                 </div>`;
 
-                // Chat Contacts
+                // Contact Chat
                 const isNew = u.lastMsgBy === 'user' && u.lastRead === false;
                 const cDiv = document.createElement('div');
-                cDiv.className = `p-3 px-5 rounded-2xl cursor-pointer flex items-center gap-2 shrink-0 border transition-all ${activeUID === id ? 'bg-yellow-500 text-black border-yellow-500' : 'bg-white/5 text-gray-400 border-white/5'}`;
-                cDiv.innerHTML = `<span class="text-[9px] font-black uppercase whitespace-nowrap">${email.split('@')[0]}</span> ${isNew ? '<span class="w-1.5 h-1.5 bg-red-500 rounded-full"></span>' : ''}`;
-                cDiv.onclick = () => { goTab('chats'); openChat(id, email); };
-                cCont.appendChild(cDiv);
+                cDiv.className = `p-3 px-6 rounded-2xl cursor-pointer shrink-0 border transition-all ${selectedUID === id ? 'bg-yellow-500 text-black border-yellow-500' : 'bg-white/5 text-gray-500 border-white/10'}`;
+                cDiv.innerHTML = `<span class="text-[10px] font-black uppercase">${email.split('@')[0]}</span> ${isNew ? '<span class="ml-2 w-2 h-2 bg-red-500 rounded-full inline-block"></span>' : ''}`;
+                cDiv.onclick = () => { switchTab('chats'); selectChat(id, email); };
+                cBox.appendChild(cDiv);
             });
         });
 
         // Init
         lucide.createIcons();
-        window.addEventListener('resize', () => { document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`); });
-        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
     </script>
 </body>
 </html>
