@@ -3,146 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Master Hub Pro | ZetaChain Admin</title>
-    
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIk1hc3RlciBIdWIiLAogICJzaG9ydF9uYW1lIjogIk1hc3RlciIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDAwMDAwIiwKICAidGhlbWVfY29sb3IiOiAiI2YzYmEyZiIsCiAgImljb25zIjogW3sKICAgICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsaXRpY29uLmNvbS81MTIvNDI1OS80MjU5ODUwLnBuZyIsCiAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgfV0KfQ==">
-    <meta name="theme-color" content="#f3ba2f">
-    
+    <title>Master Hub Pro V3 | Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="config.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
-        :root { --vh: 1vh; }
-        body { background: #000; color: #eee; font-family: 'Plus Jakarta Sans', sans-serif; height: calc(var(--vh, 1vh) * 100); overflow: hidden; display: flex; flex-direction: column; }
-        .glass { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
-        .tab-content { display: none; flex: 1; overflow: hidden; width: 100%; }
-        .tab-active { display: flex; flex-direction: column; }
+        body { background: #000; color: #eee; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px); }
+        .tab-content { display: none; flex: 1; overflow-y: auto; width: 100%; padding-bottom: 100px; }
+        .tab-active { display: block; }
         .active-nav { color: #f3ba2f; border-bottom: 2px solid #f3ba2f; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .chat-bubble-admin { background: #f3ba2f; color: #000; align-self: flex-end; border-radius: 15px 15px 2px 15px; word-break: break-word; }
-        .chat-bubble-user { background: #222; color: #fff; align-self: flex-start; border-radius: 15px 15px 15px 2px; border: 1px solid #333; word-break: break-word; }
-        .gold-text { color: #f3ba2f; }
+        .chat-bubble-admin { background: #f3ba2f; color: #000; align-self: flex-end; border-radius: 12px 12px 2px 12px; }
+        .chat-bubble-user { background: #1a1a1a; color: #fff; align-self: flex-start; border-radius: 12px 12px 12px 2px; border: 1px solid #333; }
     </style>
 </head>
-<body class="p-3 md:p-6">
-    <div class="max-w-[1600px] mx-auto w-full h-full flex flex-col overflow-hidden">
+<body class="p-4 md:p-8">
+    <div class="max-w-[1400px] mx-auto w-full h-full flex flex-col">
         
-        <header class="flex justify-between items-center mb-4 shrink-0 px-1">
-            <h1 class="text-lg font-black italic uppercase">MASTER <span class="text-[#f3ba2f]">HUB PRO</span></h1>
-            <nav class="flex gap-4 overflow-x-auto no-scrollbar">
-                <button onclick="st('market')" id="n-market" class="active-nav py-2 text-[9px] font-black uppercase whitespace-nowrap">Market Control</button>
-                <button onclick="st('users')" id="n-users" class="py-2 text-[9px] font-black uppercase whitespace-nowrap">User Manager</button>
-                <button onclick="st('chats')" id="n-chats" class="py-2 text-[9px] font-black uppercase whitespace-nowrap">Live Chat</button>
-                <button onclick="st('qris')" id="n-qris" class="py-2 text-[9px] font-black uppercase whitespace-nowrap">Settings</button>
+        <header class="flex justify-between items-center mb-6 shrink-0">
+            <h1 class="text-xl font-black italic italic tracking-tighter">MASTER <span class="text-[#f3ba2f]">HUB V3</span></h1>
+            <nav class="flex gap-6 overflow-x-auto no-scrollbar">
+                <button onclick="st('market')" id="n-market" class="active-nav py-2 text-[10px] font-black uppercase whitespace-nowrap">Market</button>
+                <button onclick="st('users')" id="n-users" class="py-2 text-[10px] font-black uppercase whitespace-nowrap">Users & Saldo</button>
+                <button onclick="st('chats')" id="n-chats" class="py-2 text-[10px] font-black uppercase whitespace-nowrap">Live Chat</button>
             </nav>
         </header>
 
-        <div id="t-market" class="tab-content tab-active overflow-y-auto no-scrollbar space-y-4">
+        <div id="t-market" class="tab-content tab-active space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="glass p-6 rounded-[2rem] space-y-4">
-                    <h2 class="text-yellow-500 font-black uppercase text-[10px] italic">Price Manipulation</h2>
-                    <div class="grid grid-cols-2 gap-4 text-center">
-                        <div class="bg-black/40 p-3 rounded-2xl border border-white/5">
-                            <p class="text-[8px] text-gray-500 font-bold uppercase">Binance Price</p>
-                            <p id="real-p" class="font-mono text-sm font-black italic">$0</p>
-                        </div>
-                        <div class="bg-black/40 p-3 rounded-2xl border border-white/5">
-                            <p class="text-[8px] text-gray-500 font-bold uppercase">User Price</p>
-                            <p id="user-p" class="font-mono text-sm font-black italic text-yellow-500">$0</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="number" id="offset" placeholder="Offset Price (e.g 50)" class="flex-grow bg-black border border-white/10 p-4 rounded-2xl text-xs font-bold outline-none focus:border-yellow-500">
-                        <button onclick="applyOffset()" class="bg-yellow-500 text-black px-6 font-black rounded-2xl text-[10px] uppercase">SET</button>
+                <div class="glass p-6 rounded-3xl">
+                    <p class="text-[10px] font-black text-yellow-500 mb-4 uppercase">Price Offset</p>
+                    <div class="flex gap-3">
+                        <input type="number" id="offset-input" class="flex-1 bg-black/50 border border-white/10 p-4 rounded-2xl outline-none" placeholder="Contoh: 150">
+                        <button onclick="applyOffset()" class="bg-yellow-500 text-black px-8 rounded-2xl font-black text-xs uppercase">Update</button>
                     </div>
                 </div>
-
-                <div class="glass p-6 rounded-[2rem] space-y-4">
-                    <h2 class="text-yellow-500 font-black uppercase text-[10px] italic">Global Trade Result</h2>
+                <div class="glass p-6 rounded-3xl">
+                    <p class="text-[10px] font-black text-yellow-500 mb-4 uppercase">Global Win/Loss</p>
                     <div class="grid grid-cols-3 gap-2">
-                        <button onclick="setGlobal('win')" class="bg-green-600/20 border border-green-600 p-4 rounded-2xl text-[8px] font-black hover:bg-green-600 hover:text-white transition-all">WIN</button>
-                        <button onclick="setGlobal('normal')" class="bg-gray-600/20 border border-gray-600 p-4 rounded-2xl text-[8px] font-black hover:bg-gray-600 hover:text-white transition-all">NORMAL</button>
-                        <button onclick="setGlobal('loss')" class="bg-red-600/20 border border-red-600 p-4 rounded-2xl text-[8px] font-black hover:bg-red-600 hover:text-white transition-all">LOSS</button>
-                    </div>
-                    <p class="text-[8px] text-gray-500 text-center italic font-bold uppercase tracking-widest">*Mempengaruhi semua user tanpa terkecuali</p>
-                </div>
-            </div>
-
-            <div class="glass p-6 rounded-[2rem]">
-                <h2 class="text-gray-500 font-black uppercase text-[10px] mb-4">Quick Target Logic</h2>
-                <div id="market-user-list" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                    </div>
-            </div>
-        </div>
-
-        <div id="t-users" class="tab-content overflow-y-auto no-scrollbar">
-            <div id="user-balance-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
-                </div>
-        </div>
-
-        <div id="t-chats" class="tab-content flex-col md:flex-row gap-3">
-            <div class="h-32 md:h-full md:w-1/4 glass rounded-3xl flex flex-col overflow-hidden shrink-0">
-                <div class="p-3 border-b border-white/5 text-[9px] font-black uppercase text-gray-500">Active Contacts</div>
-                <div id="contact-list" class="flex-1 overflow-y-auto flex md:flex-col gap-2 p-2 no-scrollbar"></div>
-            </div>
-            <div class="flex-1 glass rounded-3xl flex flex-col overflow-hidden relative bg-black/20">
-                <div id="chat-header" class="p-3 border-b border-white/5 text-[10px] font-bold text-yellow-500 uppercase italic">Pilih percakapan...</div>
-                <div id="chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 no-scrollbar"></div>
-                <div id="reply-area" class="p-3 bg-black/60 border-t border-white/5 hidden">
-                    <div class="flex gap-2">
-                        <input type="text" id="admin-msg" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs outline-none focus:border-yellow-500" placeholder="Ketik pesan balas...">
-                        <button onclick="sendReply()" class="w-11 h-11 bg-yellow-500 text-black rounded-xl flex items-center justify-center shrink-0"><i data-lucide="send" class="w-4 h-4"></i></button>
+                        <button onclick="setGlobal('win')" class="bg-green-600/20 text-green-500 p-3 rounded-xl font-bold text-[10px]">FORCE WIN</button>
+                        <button onclick="setGlobal('normal')" class="bg-white/5 text-white p-3 rounded-xl font-bold text-[10px]">NORMAL</button>
+                        <button onclick="setGlobal('loss')" class="bg-red-600/20 text-red-500 p-3 rounded-xl font-bold text-[10px]">FORCE LOSS</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="t-qris" class="tab-content justify-start md:justify-center items-center overflow-y-auto">
-            <div class="w-full max-w-md glass p-8 rounded-[2.5rem] text-center space-y-6 my-4">
-                <div class="flex justify-center mb-2 text-yellow-500"><i data-lucide="settings" class="w-8 h-8"></i></div>
-                <h2 class="text-white font-black uppercase text-sm italic tracking-tighter">System Configuration</h2>
-                
-                <div class="border-2 border-dashed border-white/10 p-6 rounded-[2rem] bg-black/40 space-y-4">
-                    <p class="text-[9px] font-bold text-gray-500 uppercase">QRIS Payment Gateway</p>
-                    <input type="file" id="inp-qris" class="hidden" accept="image/*" onchange="previewQRIS(this)">
-                    <button onclick="document.getElementById('inp-qris').click()" class="bg-white/5 border border-white/10 px-6 py-3 rounded-xl text-[9px] font-black uppercase hover:bg-white/10 transition-all">Pilih Gambar QRIS</button>
-                    <img id="prev-qris" class="mt-4 w-full max-h-52 object-contain mx-auto hidden bg-white p-2 rounded-xl">
+        <div id="t-users" class="tab-content">
+            <div id="user-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 </div>
-                
-                <button onclick="saveQRIS()" class="w-full py-4 bg-yellow-500 text-black font-black rounded-2xl text-[10px] uppercase shadow-lg shadow-yellow-500/10">Publish Configuration</button>
+        </div>
+
+        <div id="t-chats" class="tab-content h-full">
+            <div class="flex flex-col md:flex-row gap-4 h-[70vh]">
+                <div class="w-full md:w-1/3 glass rounded-3xl overflow-y-auto no-scrollbar p-2" id="contact-list">
+                    </div>
+                <div class="flex-1 glass rounded-3xl flex flex-col overflow-hidden bg-black/40">
+                    <div id="chat-target" class="p-4 border-b border-white/5 font-black text-xs text-yellow-500 uppercase italic">Pilih User</div>
+                    <div id="chat-window" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 no-scrollbar"></div>
+                    <div class="p-4 bg-black/80 flex gap-2">
+                        <input type="text" id="msg-input" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs outline-none" placeholder="Balas pesan...">
+                        <button onclick="sendMsg()" class="bg-yellow-500 text-black w-12 h-12 rounded-xl flex items-center justify-center"><i data-lucide="send" class="w-5 h-5"></i></button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="install-modal" class="fixed bottom-4 left-4 right-4 bg-yellow-500 p-4 rounded-2xl flex justify-between items-center z-[99999] hidden shadow-2xl border border-white/20">
-        <div class="flex items-center gap-2 text-black">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            <span class="text-[10px] font-black uppercase">Install Master Hub Pro?</span>
-        </div>
-        <button onclick="installApp()" class="bg-black text-white px-4 py-2 rounded-lg text-[9px] font-black uppercase">Install</button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, doc, onSnapshot, updateDoc, setDoc, query, orderBy, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, onSnapshot, updateDoc, setDoc, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Gunakan config dari config.js atau definisikan di sini
-        const config = APP_CONFIG.firebase; 
-        const app = initializeApp(config);
+        const app = initializeApp(APP_CONFIG.firebase);
         const db = getFirestore(app);
 
-        // State Global
-        let activeUID = null;
-        let base64String = "";
-        let basePrice = 0;
-        let currentOffset = 0;
-        const COINS = ['BTC', 'ETH', 'SOL', 'TRX', 'LINEA', 'ARB', 'BNB', 'BASE', 'OP', 'MATIC'];
+        let activeUID = "";
+        const COINS = ['BTC', 'ETH', 'BNB', 'SOL', 'TRX'];
 
-        // Format IDR Utility
-        const formatIDR = (num) => new Intl.NumberFormat('id-ID').format(num);
-
-        // Tab Switching
+        // --- CORE FUNCTIONS ---
         window.st = (t) => {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('tab-active'));
             document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-nav'));
@@ -150,164 +91,121 @@
             document.getElementById('n-' + t).classList.add('active-nav');
         };
 
-        // --- MARKET CONTROL LOGIC ---
-        async function fetchBinance() {
-            try {
-                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-                const d = await res.json();
-                basePrice = parseFloat(d.price);
-                document.getElementById('real-p').innerText = "$" + basePrice.toLocaleString();
-                document.getElementById('user-p').innerText = "$" + (basePrice + currentOffset).toLocaleString();
-            } catch(e) {}
-        }
-        setInterval(fetchBinance, 1000);
+        const toIDR = (num) => new Intl.NumberFormat('id-ID').format(num);
 
-        onSnapshot(doc(db, "system", "market_control"), (s) => {
-            if(s.exists()){ 
-                currentOffset = s.data().offset || 0; 
-                document.getElementById('offset').value = currentOffset;
-            }
-        });
-
+        // --- MARKET LOGIC ---
         window.applyOffset = async () => {
-            const val = parseFloat(document.getElementById('offset').value) || 0;
+            const val = parseFloat(document.getElementById('offset-input').value) || 0;
             await setDoc(doc(db, "system", "market_control"), { offset: val }, { merge: true });
-            alert("Offset Market Applied!");
+            alert("Market Updated!");
         };
 
-        window.setGlobal = async (mode) => {
-            await setDoc(doc(db, "system", "market_control"), { mode: mode }, { merge: true });
-            alert("Global Result: " + mode.toUpperCase());
+        window.setGlobal = async (m) => {
+            await setDoc(doc(db, "system", "market_control"), { mode: m }, { merge: true });
+            alert("Global Mode: " + m.toUpperCase());
         };
 
-        window.setTarget = async (id, mode) => {
-            await updateDoc(doc(db, "users", id), { next_trade: mode });
-            alert("User " + id.slice(0,5) + "... Target: " + mode.toUpperCase());
+        // --- USER MANAGEMENT LOGIC ---
+        window.updateSaldo = async (uid, val) => {
+            const clearVal = parseInt(val.replace(/[^0-9]/g, '')) || 0;
+            try {
+                await updateDoc(doc(db, "users", uid), { balance: clearVal });
+                console.log("Saldo updated for:", uid);
+            } catch(e) { console.error("Update fail:", e); }
         };
 
-        // --- USER & BALANCE LOGIC ---
-        window.updateBalance = async (userId, val) => {
-            const num = parseInt(val.replace(/[^0-9]/g, '')) || 0;
-            await updateDoc(doc(db, "users", userId), { balance: num });
+        window.updateCoin = async (uid, coin, val) => {
+            const up = {}; up[`${coin.toLowerCase()}_bal`] = parseFloat(val) || 0;
+            await updateDoc(doc(db, "users", uid), up);
         };
 
-        window.updateCrypto = async (userId, coin, val) => {
-            const up = {}; up[coin.toLowerCase()+'_bal'] = parseFloat(val) || 0;
-            await updateDoc(doc(db, "users", userId), up);
+        window.forceUser = async (uid, mode) => {
+            await updateDoc(doc(db, "users", uid), { next_trade: mode });
+            alert("Target Set!");
         };
 
-        // --- CHAT LOGIC ---
+        // --- LIVE CHAT LOGIC ---
         window.openChat = (uid, email) => {
             activeUID = uid;
-            document.getElementById('reply-area').classList.remove('hidden');
-            document.getElementById('chat-header').innerText = `CONVERSATION: ${email}`;
-            updateDoc(doc(db, "users", uid), { lastRead: true });
+            document.getElementById('chat-target').innerText = `CHAT: ${email}`;
+            updateDoc(doc(db, "users", uid), { lastRead: true }); // Tandai sudah dibaca
             
             onSnapshot(query(collection(db, "users", uid, "chats"), orderBy("timestamp", "asc")), (sn) => {
-                const box = document.getElementById('chat-box');
-                box.innerHTML = '';
+                const win = document.getElementById('chat-window');
+                win.innerHTML = '';
                 sn.forEach(d => {
                     const m = d.data();
-                    const b = document.createElement('div');
-                    b.className = `p-3 max-w-[85%] text-[10px] font-bold ${m.sender === 'admin' ? 'chat-bubble-admin' : 'chat-bubble-user'}`;
-                    b.innerText = m.text;
-                    box.appendChild(b);
+                    const div = document.createElement('div');
+                    div.className = `p-3 max-w-[80%] text-[11px] font-bold ${m.sender === 'admin' ? 'chat-bubble-admin' : 'chat-bubble-user'}`;
+                    div.innerText = m.text;
+                    win.appendChild(div);
                 });
-                box.scrollTop = box.scrollHeight;
+                win.scrollTop = win.scrollHeight;
             });
         };
 
-        window.sendReply = async () => {
-            const inp = document.getElementById('admin-msg');
-            const text = inp.value.trim();
-            if(!activeUID || !text) return;
+        window.sendMsg = async () => {
+            const inp = document.getElementById('msg-input');
+            if(!activeUID || !inp.value.trim()) return;
+            const text = inp.value;
             inp.value = '';
             await addDoc(collection(db, "users", activeUID, "chats"), { sender: 'admin', text: text, timestamp: serverTimestamp() });
             await updateDoc(doc(db, "users", activeUID), { lastMsgBy: 'admin', lastRead: true });
         };
 
-        // --- QRIS LOGIC ---
-        window.previewQRIS = (input) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                base64String = e.target.result;
-                const img = document.getElementById('prev-qris');
-                img.src = base64String; img.classList.remove('hidden');
-            };
-            reader.readAsDataURL(input.files[0]);
-        };
-
-        window.saveQRIS = async () => {
-            if(!base64String) return alert("Pilih gambar!");
-            await setDoc(doc(db, "config", "payment"), { qris_idr: base64String });
-            alert("QRIS Updated & Published!");
-        };
-
-        // --- REALTIME DATA SYNC ---
+        // --- REALTIME SYNC ---
         onSnapshot(collection(db, "users"), (snap) => {
-            const mUserList = document.getElementById('market-user-list');
-            const bUserList = document.getElementById('user-balance-list');
-            const contactList = document.getElementById('contact-list');
-            
-            mUserList.innerHTML = ''; bUserList.innerHTML = ''; contactList.innerHTML = '';
+            const grid = document.getElementById('user-grid');
+            const contacts = document.getElementById('contact-list');
+            grid.innerHTML = ''; contacts.innerHTML = '';
 
-            snap.forEach(docSnap => {
-                const u = docSnap.data();
-                const id = docSnap.id;
-                const email = u.email || "User";
+            snap.forEach(s => {
+                const u = s.data();
+                const id = s.id;
+                const email = u.email || "No Email";
 
-                // List for Market Control
-                mUserList.innerHTML += `
-                    <div class="bg-black/40 p-3 rounded-2xl border border-white/5 flex flex-col gap-2">
-                        <p class="text-[9px] font-black truncate text-gray-400">${email}</p>
-                        <div class="flex gap-1">
-                            <button onclick="setTarget('${id}','win')" class="flex-1 bg-green-600/20 text-green-500 py-2 rounded-lg text-[8px] font-black">WIN</button>
-                            <button onclick="setTarget('${id}','loss')" class="flex-1 bg-red-600/20 text-red-500 py-2 rounded-lg text-[8px] font-black">LOSS</button>
-                        </div>
-                    </div>`;
-
-                // List for Balance Manager
-                let coinHtml = '';
+                // Render User Management Card
+                let coinFields = '';
                 COINS.forEach(c => {
-                    coinHtml += `<div class="flex justify-between items-center text-[8px] mb-1">
-                        <span class="text-gray-500 font-bold">${c}</span>
-                        <input type="number" step="any" value="${u[c.toLowerCase()+'_bal']||0}" onchange="updateCrypto('${id}','${c}',this.value)" class="bg-black border border-white/10 w-24 px-2 py-0.5 rounded text-yellow-500 text-right outline-none">
+                    coinFields += `
+                    <div class="flex justify-between items-center bg-black/20 p-2 rounded-lg mb-1">
+                        <span class="text-[8px] font-black text-gray-500">${c}</span>
+                        <input type="number" step="any" onchange="updateCoin('${id}','${c}',this.value)" value="${u[c.toLowerCase()+'_bal'] || 0}" class="bg-transparent text-right text-[10px] outline-none text-yellow-500 w-20">
                     </div>`;
                 });
 
-                bUserList.innerHTML += `
-                    <div class="glass p-5 rounded-[2rem] border border-white/5 space-y-4">
-                        <p class="text-[9px] font-black text-gray-500 uppercase truncate">${email}</p>
-                        <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
-                            <p class="text-[7px] text-gray-400 font-black uppercase mb-1">Total Balance IDR</p>
-                            <div class="flex items-center gap-1 font-black text-yellow-500">
-                                <span class="text-xs">Rp</span>
-                                <input type="text" value="${formatIDR(u.balance || 0)}" oninput="this.value = formatIDR(this.value.replace(/[^0-9]/g,'')); updateBalance('${id}', this.value)" class="bg-transparent text-sm w-full outline-none" placeholder="0">
-                            </div>
+                grid.innerHTML += `
+                <div class="glass p-5 rounded-3xl space-y-4">
+                    <div class="flex justify-between items-start">
+                        <p class="text-[9px] font-black text-gray-400 truncate w-32">${email}</p>
+                        <div class="flex gap-1">
+                            <button onclick="forceUser('${id}','win')" class="px-2 py-1 bg-green-600/20 text-green-500 text-[7px] font-bold rounded">WIN</button>
+                            <button onclick="forceUser('${id}','loss')" class="px-2 py-1 bg-red-600/20 text-red-500 text-[7px] font-bold rounded">LOSS</button>
                         </div>
-                        <div class="grid grid-cols-1 border-t border-white/5 pt-3">${coinHtml}</div>
-                    </div>`;
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
+                        <p class="text-[7px] font-black text-gray-500 uppercase mb-1">Saldo IDR</p>
+                        <div class="flex items-center gap-1 font-black text-yellow-500">
+                            <span class="text-xs">Rp</span>
+                            <input type="text" value="${toIDR(u.balance || 0)}" 
+                                oninput="this.value = toIDR(this.value.replace(/[^0-9]/g,'')); updateSaldo('${id}', this.value)" 
+                                class="bg-transparent text-sm w-full outline-none">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1">${coinFields}</div>
+                </div>`;
 
-                // List for Contact Chat
-                const isUnread = u.lastMsgBy === 'user' && u.lastRead === false;
-                const cBtn = document.createElement('div');
-                cBtn.className = `p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between ${activeUID === id ? 'bg-yellow-500 text-black shadow-lg shadow-yellow-500/20' : 'bg-white/5 text-gray-400'}`;
-                cBtn.innerHTML = `<span class="text-[9px] font-black uppercase truncate mr-2">${email.split('@')[0]}</span>${isUnread ? '<div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>' : ''}`;
-                cBtn.onclick = () => openChat(id, email);
-                contactList.appendChild(cBtn);
+                // Render Contact List for Chat
+                const unread = u.lastMsgBy === 'user' && u.lastRead === false;
+                const cDiv = document.createElement('div');
+                cDiv.className = `p-4 mb-2 rounded-2xl cursor-pointer flex justify-between items-center ${activeUID === id ? 'bg-yellow-500 text-black' : 'bg-white/5 text-gray-400'}`;
+                cDiv.innerHTML = `<span class="text-[10px] font-black uppercase">${email.split('@')[0]}</span> ${unread ? '<div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>' : ''}`;
+                cDiv.onclick = () => openChat(id, email);
+                contacts.appendChild(cDiv);
             });
         });
 
-        // Initialize Icons & PWA
         lucide.createIcons();
-        document.getElementById('admin-msg').onkeypress = (e) => { if(e.key === 'Enter') sendReply(); };
-
-        let defPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => { 
-            e.preventDefault(); defPrompt = e; 
-            document.getElementById('install-modal').classList.remove('hidden'); 
-        });
-        window.installApp = () => { if(defPrompt) { defPrompt.prompt(); document.getElementById('install-modal').classList.add('hidden'); } };
     </script>
 </body>
 </html>
