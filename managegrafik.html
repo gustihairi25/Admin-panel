@@ -1,4 +1,25 @@
- none; }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Master Hub | Admin Panel ZetaChain</title>
+    
+    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIk1hc3RlciBIdWIiLAogICJzaG9ydF9uYW1lIjogIk1hc3RlciIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDAwMDAwIiwKICAidGhlbWVfY29sb3IiOiAiI2YzYmEyZiIsCiAgImljb25zIjogW3sKICAgICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsaXRpY29uLmNvbS81MTIvNDI1OS80MjU5ODUwLnBuZyIsCiAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgfV0KfQ==">
+    
+    <meta name="theme-color" content="#f3ba2f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        :root { --vh: 1vh; }
+        body { background: #000; color: #eee; font-family: 'Plus Jakarta Sans', sans-serif; height: calc(var(--vh, 1vh) * 100); overflow: hidden; display: flex; flex-direction: column; }
+        .glass { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+        .tab-content { display: none; flex: 1; overflow: hidden; width: 100%; }
+        .tab-active { display: flex; flex-direction: column; }
+        .active-nav { color: #f3ba2f; border-bottom: 2px solid #f3ba2f; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
         .chat-bubble-admin { background: #f3ba2f; color: #000; align-self: flex-end; border-radius: 15px 15px 2px 15px; word-break: break-word; }
         .chat-bubble-user { background: #222; color: #fff; align-self: flex-start; border-radius: 15px 15px 15px 2px; border: 1px solid #333; word-break: break-word; }
         #user-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; padding-bottom: 20px; }
@@ -67,7 +88,7 @@
             authDomain: "studio-727777898-40aea.firebaseapp.com", 
             projectId: "studio-727777898-40aea", 
             appId: "1:351263967108:web:a0c01af41422903cc17fd1" 
-        };
+};
         const app = initializeApp(config);
         const db = getFirestore(app);
 
@@ -154,7 +175,7 @@
                 contactBtn.onclick = () => openChat(id, email);
                 cList.appendChild(contactBtn);
             });
-        });
+});
 
         window.openChat = (uid, email) => {
             activeUID = uid;
@@ -214,4 +235,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
