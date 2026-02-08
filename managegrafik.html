@@ -7,68 +7,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { background: #000; color: #eee; font-family: sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        body { background: #000; color: #eee; font-family: 'Plus Jakarta Sans', sans-serif; }
         .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
         .tab-content { display: none; }
         .active { display: block; }
         .nav-btn.active-nav { color: #f3ba2f; border-bottom: 2px solid #f3ba2f; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body class="p-4">
-    <header class="flex justify-between items-center mb-6">
-        <h1 class="font-black text-xl italic uppercase">MASTER <span class="text-yellow-500">HUB</span></h1>
+    <header class="flex justify-between items-center mb-6 max-w-6xl mx-auto">
+        <h1 class="font-black text-xl italic uppercase tracking-tighter">MASTER <span class="text-yellow-500">HUB</span></h1>
         <nav class="flex gap-4">
-            <button onclick="st('user')" id="n-user" class="nav-btn active-nav text-[10px] font-bold uppercase py-2">Users</button>
-            <button onclick="st('chat')" id="n-chat" class="nav-btn text-[10px] font-bold uppercase py-2">Chats</button>
-            <button onclick="st('qris')" id="n-qris" class="nav-btn text-[10px] font-bold uppercase py-2">QRIS</button>
+            <button onclick="st('user')" id="n-user" class="nav-btn active-nav text-[10px] font-black uppercase py-2">Users</button>
+            <button onclick="st('chat')" id="n-chat" class="nav-btn text-[10px] font-black uppercase py-2">Messages</button>
+            <button onclick="st('qris')" id="n-qris" class="nav-btn text-[10px] font-black uppercase py-2">QRIS Setting</button>
         </nav>
     </header>
 
-    <div id="t-user" class="tab-content active space-y-4">
-        <div id="user-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </div>
+    <main class="max-w-6xl mx-auto">
+        <div id="t-user" class="tab-content active space-y-4">
+            <div id="user-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </div>
 
-    <div id="t-chat" class="tab-content h-[70vh]">
-        <div class="flex h-full gap-4">
-            <div id="contact-list" class="w-1/3 glass rounded-2xl p-2 overflow-y-auto"></div>
-            <div class="flex-1 glass rounded-2xl flex flex-col p-4">
-                <div id="chat-box" class="flex-1 overflow-y-auto space-y-2 mb-4"></div>
-                <div class="flex gap-2">
-                    <input type="text" id="admin-msg" class="flex-1 bg-white/5 p-3 rounded-xl outline-none text-xs">
-                    <button onclick="sendReply()" class="bg-yellow-500 text-black px-4 rounded-xl font-bold">Kirim</button>
+        <div id="t-chat" class="tab-content h-[80vh]">
+            <div class="flex h-full gap-4">
+                <div id="contact-list" class="w-1/3 glass rounded-3xl p-4 overflow-y-auto space-y-2">
+                    <p class="text-[9px] font-black text-gray-500 uppercase mb-4 tracking-widest">Active Conversations</p>
+                </div>
+                <div class="flex-1 glass rounded-[2rem] flex flex-col overflow-hidden border border-white/10">
+                    <div id="chat-header" class="p-4 border-b border-white/5 bg-white/5">
+                        <p id="target-name" class="text-xs font-black uppercase italic text-yellow-500">Pilih User untuk Chat</p>
+                    </div>
+                    <div id="chat-box" class="flex-1 overflow-y-auto p-4 space-y-3 flex flex-col"></div>
+                    <div class="p-4 bg-black/40 flex gap-2">
+                        <input type="text" id="admin-msg" placeholder="Tulis balasan..." class="flex-1 bg-white/5 p-4 rounded-2xl outline-none text-xs font-bold border border-white/5 focus:border-yellow-500">
+                        <button onclick="sendReply()" class="bg-yellow-500 text-black px-6 rounded-2xl font-black uppercase italic text-xs hover:scale-95 transition-all">Kirim</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-<div id="t-qris" class="tab-content">
-    <div class="max-w-md mx-auto glass p-6 rounded-3xl space-y-4">
-        <h2 class="text-center font-black italic text-yellow-500 uppercase">QRIS Manager</h2>
-        
-        <select id="target-coin" class="w-full bg-black border border-white/10 p-4 rounded-xl text-white font-bold text-xs outline-none">
-            <option value="qris_idr">QRIS IDR (UTAMA)</option>
-            <option value="qris_btc">BTC (Override img/)</option>
-            <option value="qris_eth">ETH (Override img/)</option>
-            <option value="qris_sol">SOL (Override img/)</option>
-            <option value="qris_trx">TRX (Override img/)</option>
-            <option value="qris_bnb">BNB (Override img/)</option>
-            <option value="qris_matic">MATIC (Override img/)</option>
-            <option value="qris_arb">ARB (Override img/)</option>
-            <option value="qris_op">OP (Override img/)</option>
-            <option value="qris_base">BASE (Override img/)</option>
-            <option value="qris_linea">LINEA (Override img/)</option>
-        </select>
+        <div id="t-qris" class="tab-content">
+            <div class="max-w-md mx-auto glass p-8 rounded-[2.5rem] space-y-6 border border-white/10">
+                <div class="text-center">
+                    <h2 class="font-black italic text-yellow-500 uppercase text-xl">QRIS Manager</h2>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase">Update Payment Gateways</p>
+                </div>
+                
+                <select id="target-coin" class="w-full bg-black border border-white/10 p-4 rounded-2xl text-white font-bold text-xs outline-none focus:border-yellow-500">
+                    <option value="qris_idr">QRIS IDR (UTAMA)</option>
+                    <option value="qris_btc">BTC (Bitcoin)</option>
+                    <option value="qris_eth">ETH (Ethereum)</option>
+                    <option value="qris_sol">SOL (Solana)</option>
+                    <option value="qris_trx">TRX (Tron)</option>
+                    <option value="qris_bnb">BNB (Smart Chain)</option>
+                    <option value="qris_matic">MATIC (Polygon)</option>
+                    <option value="qris_arb">ARB (Arbitrum)</option>
+                    <option value="qris_op">OP (Optimism)</option>
+                    <option value="qris_base">BASE Network</option>
+                    <option value="qris_linea">LINEA Network</option>
+                </select>
 
-        <div onclick="document.getElementById('inp-file').click()" class="border-2 border-dashed border-white/10 p-8 rounded-2xl text-center cursor-pointer">
-            <img id="preview-admin" class="max-h-40 mx-auto hidden rounded-lg mb-2">
-            <p id="placeholder-text" class="text-[10px] font-black text-gray-500 uppercase">Upload Gambar Baru</p>
-            <input type="file" id="inp-file" class="hidden" accept="image/*" onchange="previewFile(this)">
+                <div onclick="document.getElementById('inp-file').click()" class="border-2 border-dashed border-white/10 p-10 rounded-3xl text-center cursor-pointer hover:bg-white/5 transition-all">
+                    <img id="preview-admin" class="max-h-48 mx-auto hidden rounded-xl mb-2 shadow-2xl">
+                    <div id="placeholder-ui">
+                        <i data-lucide="image" class="mx-auto mb-2 opacity-20"></i>
+                        <p class="text-[10px] font-black text-gray-500 uppercase">Klik untuk Upload File</p>
+                    </div>
+                    <input type="file" id="inp-file" class="hidden" accept="image/*" onchange="previewFile(this)">
+                </div>
+
+                <button onclick="uploadQR()" id="btn-up" class="w-full py-5 bg-yellow-500 text-black font-black rounded-2xl uppercase italic shadow-lg active:scale-95 transition-all">Simpan Perubahan</button>
+            </div>
         </div>
-
-        <button onclick="uploadQR()" id="btn-up" class="w-full py-4 bg-yellow-500 text-black font-black rounded-xl uppercase italic">Simpan Perubahan</button>
-        <p class="text-[8px] text-gray-500 text-center uppercase font-bold">Catatan: Mengupload di sini akan menggantikan gambar default folder img/</p>
-    </div>
-</div>
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -83,9 +98,9 @@
         const app = initializeApp(config);
         const db = getFirestore(app);
 
-        let base64 = "", activeUID = "";
+        let base64Data = "", activeUID = "", activeEmail = "";
 
-        // Navigasi
+        // Navigasi Tab
         window.st = (t) => {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active-nav'));
@@ -95,52 +110,96 @@
 
         // Saldo
         window.editBal = async (id, cur) => {
-            const n = prompt("Input Saldo Baru:", cur);
-            if(n) await updateDoc(doc(db, "users", id), { balance: parseInt(n) });
+            const n = prompt("Masukkan Nominal Saldo Baru:", cur);
+            if(n !== null) await updateDoc(doc(db, "users", id), { balance: parseInt(n) });
         };
 
-        // QRIS
-        window.previewQR = (el) => {
+        // --- FUNGSI QRIS (SUDAH DIPERBAIKI) ---
+        window.previewFile = (el) => {
             const fr = new FileReader();
             fr.onload = (e) => { 
-                base64 = e.target.result; 
-                document.getElementById('prev-img').src = base64;
-                document.getElementById('prev-img').classList.remove('hidden');
-                document.getElementById('up-txt').classList.add('hidden');
+                base64Data = e.target.result; 
+                const img = document.getElementById('preview-admin');
+                img.src = base64Data;
+                img.classList.remove('hidden');
+                document.getElementById('placeholder-ui').classList.add('hidden');
             };
-            fr.readAsDataURL(el.files[0]);
+            if(el.files[0]) fr.readAsDataURL(el.files[0]);
         };
 
-        window.saveQRIS = async () => {
+        window.uploadQR = async () => {
             const coin = document.getElementById('target-coin').value;
-            if(!base64) return alert("Pilih gambar!");
-            await setDoc(doc(db, "config", "payment"), { [coin]: base64 }, { merge: true });
-            alert("QRIS " + coin + " Berhasil Diupdate!");
+            const btn = document.getElementById('btn-up');
+            if(!base64Data) return alert("Pilih gambar terlebih dahulu!");
+            
+            btn.innerText = "PROSES MENGIRIM...";
+            btn.disabled = true;
+
+            try {
+                await setDoc(doc(db, "config", "payment"), { [coin]: base64Data }, { merge: true });
+                alert("Berhasil! QRIS " + coin.toUpperCase() + " telah diperbarui.");
+                location.reload();
+            } catch (e) { 
+                alert("Error: " + e.message); 
+                btn.disabled = false;
+                btn.innerText = "Simpan Perubahan";
+            }
         };
 
-        // Real-time Users & Chat
+        // Real-time Users
         onSnapshot(collection(db, "users"), (sn) => {
             const uBox = document.getElementById('user-list');
             const cBox = document.getElementById('contact-list');
             uBox.innerHTML = ''; cBox.innerHTML = '';
+            
             sn.forEach(d => {
                 const u = d.data();
-                uBox.innerHTML += `<div class="glass p-4 rounded-2xl flex justify-between items-center">
-                    <div><p class="text-[10px] font-bold opacity-50 uppercase">${u.email}</p><p class="text-xl font-black italic">Rp ${u.balance||0}</p></div>
-                    <button onclick="editBal('${d.id}', ${u.balance||0})" class="bg-white text-black text-[9px] px-3 py-2 rounded-lg font-black uppercase tracking-tighter">Atur Saldo</button>
+                const shortEmail = u.email ? u.email.split('@')[0] : 'Unknown';
+                
+                // Card User
+                uBox.innerHTML += `
+                <div class="glass p-5 rounded-[2rem] border border-white/5 flex flex-col gap-3">
+                    <div class="flex justify-between items-start">
+                        <div class="p-2 bg-yellow-500/10 rounded-lg"><i data-lucide="user" class="text-yellow-500 w-4 h-4"></i></div>
+                        <p class="text-[9px] font-black text-gray-500 uppercase">${u.email}</p>
+                    </div>
+                    <p class="text-2xl font-black italic">Rp ${(u.balance||0).toLocaleString()}</p>
+                    <button onclick="editBal('${d.id}', ${u.balance||0})" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white text-[10px] rounded-xl font-black uppercase transition-all">Set Balance</button>
                 </div>`;
-                cBox.innerHTML += `<div onclick="openChat('${d.id}','${u.email}')" class="p-3 bg-white/5 rounded-xl text-[10px] cursor-pointer mb-2 font-bold uppercase truncate border border-transparent hover:border-yellow-500">${u.email?.split('@')[0]}</div>`;
+
+                // Item Kontak Chat
+                cBox.innerHTML += `
+                <div onclick="openChat('${d.id}','${u.email}')" class="p-4 bg-white/5 rounded-2xl cursor-pointer hover:bg-yellow-500/10 border border-transparent hover:border-yellow-500/30 transition-all flex items-center gap-3 group">
+                    <div class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-black font-black text-[10px]">${shortEmail[0].toUpperCase()}</div>
+                    <div class="flex-1 overflow-hidden">
+                        <p class="text-[11px] font-black uppercase text-white group-hover:text-yellow-500 transition-colors truncate">${shortEmail}</p>
+                        <p class="text-[8px] text-gray-500 truncate">${u.email}</p>
+                    </div>
+                </div>`;
             });
+            lucide.createIcons();
         });
 
+        // Chat Logic
         window.openChat = (uid, email) => {
             activeUID = uid;
-            onSnapshot(query(collection(db, "users", uid, "chats"), orderBy("timestamp", "asc")), sn => {
-                const box = document.getElementById('chat-box'); box.innerHTML = '';
+            activeEmail = email;
+            document.getElementById('target-name').innerText = "Chatting with: " + email;
+            
+            const q = query(collection(db, "users", uid, "chats"), orderBy("timestamp", "asc"));
+            onSnapshot(q, sn => {
+                const box = document.getElementById('chat-box');
+                box.innerHTML = '';
                 sn.forEach(m => {
                     const d = m.data();
                     const isAdmin = d.sender === 'admin';
-                    box.innerHTML += `<div class="p-2 max-w-[80%] text-[10px] rounded-xl font-bold ${isAdmin?'bg-yellow-500 text-black self-end ml-auto':'bg-white/10 text-white self-start'}">${d.text}</div>`;
+                    box.innerHTML += `
+                    <div class="flex flex-col ${isAdmin?'items-end':'items-start'}">
+                        <p class="text-[7px] font-bold uppercase mb-1 opacity-40 px-2">${isAdmin ? 'Admin (You)' : email.split('@')[0]}</p>
+                        <div class="px-4 py-2.5 max-w-[85%] text-[11px] font-bold rounded-2xl shadow-sm ${isAdmin?'bg-yellow-500 text-black rounded-tr-none':'bg-white/10 text-white rounded-tl-none border border-white/5'}">
+                            ${d.text}
+                        </div>
+                    </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
             });
@@ -148,9 +207,15 @@
 
         window.sendReply = async () => {
             const msg = document.getElementById('admin-msg');
-            if(!activeUID || !msg.value) return;
-            await addDoc(collection(db, "users", activeUID, "chats"), { sender: 'admin', text: msg.value, timestamp: serverTimestamp() });
-            msg.value = '';
+            if(!activeUID || !msg.value.trim()) return;
+            try {
+                await addDoc(collection(db, "users", activeUID, "chats"), { 
+                    sender: 'admin', 
+                    text: msg.value, 
+                    timestamp: serverTimestamp() 
+                });
+                msg.value = '';
+            } catch(e) { alert(e.message); }
         };
 
         lucide.createIcons();
