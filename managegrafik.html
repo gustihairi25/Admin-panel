@@ -41,22 +41,34 @@
         </div>
     </div>
 
-    <div id="t-qris" class="tab-content">
-        <div class="max-w-md mx-auto glass p-6 rounded-3xl space-y-4 text-center">
-            <select id="target-coin" class="w-full bg-black border border-white/10 p-4 rounded-xl text-white font-bold">
-                <option value="qris_idr">QRIS UTAMA (IDR)</option>
-                <option value="qris_btc">TOKEN BTC</option>
-                <option value="qris_eth">TOKEN ETH</option>
-                <option value="qris_sol">TOKEN SOL</option>
-            </select>
-            <input type="file" id="inp-qris" class="hidden" onchange="previewQR(this)">
-            <div onclick="document.getElementById('inp-qris').click()" class="border-2 border-dashed border-white/10 p-10 rounded-2xl cursor-pointer">
-                <img id="prev-img" class="max-h-40 mx-auto hidden">
-                <p id="up-txt" class="text-xs text-gray-500 uppercase font-black">Klik untuk Upload Gambar</p>
-            </div>
-            <button onclick="saveQRIS()" class="w-full py-4 bg-yellow-500 text-black font-black rounded-xl uppercase">Update Database</button>
+<div id="t-qris" class="tab-content">
+    <div class="max-w-md mx-auto glass p-6 rounded-3xl space-y-4">
+        <h2 class="text-center font-black italic text-yellow-500 uppercase">QRIS Manager</h2>
+        
+        <select id="target-coin" class="w-full bg-black border border-white/10 p-4 rounded-xl text-white font-bold text-xs outline-none">
+            <option value="qris_idr">QRIS IDR (UTAMA)</option>
+            <option value="qris_btc">BTC (Override img/)</option>
+            <option value="qris_eth">ETH (Override img/)</option>
+            <option value="qris_sol">SOL (Override img/)</option>
+            <option value="qris_trx">TRX (Override img/)</option>
+            <option value="qris_bnb">BNB (Override img/)</option>
+            <option value="qris_matic">MATIC (Override img/)</option>
+            <option value="qris_arb">ARB (Override img/)</option>
+            <option value="qris_op">OP (Override img/)</option>
+            <option value="qris_base">BASE (Override img/)</option>
+            <option value="qris_linea">LINEA (Override img/)</option>
+        </select>
+
+        <div onclick="document.getElementById('inp-file').click()" class="border-2 border-dashed border-white/10 p-8 rounded-2xl text-center cursor-pointer">
+            <img id="preview-admin" class="max-h-40 mx-auto hidden rounded-lg mb-2">
+            <p id="placeholder-text" class="text-[10px] font-black text-gray-500 uppercase">Upload Gambar Baru</p>
+            <input type="file" id="inp-file" class="hidden" accept="image/*" onchange="previewFile(this)">
         </div>
+
+        <button onclick="uploadQR()" id="btn-up" class="w-full py-4 bg-yellow-500 text-black font-black rounded-xl uppercase italic">Simpan Perubahan</button>
+        <p class="text-[8px] text-gray-500 text-center uppercase font-bold">Catatan: Mengupload di sini akan menggantikan gambar default folder img/</p>
     </div>
+</div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
